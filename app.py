@@ -18,3 +18,15 @@ st.json(reporte)
 st.subheader("Bitácora de limpieza")
 st.json(bitacora)
 st.dataframe(limpio.head(20))
+
+from src.eda import AnalizadorRiesgo
+
+analizador = AnalizadorRiesgo(limpio)
+
+st.header("Prueba del módulo EDA")
+st.json(analizador.perfil_general())
+st.subheader("Tasa de impago por grado")
+st.dataframe(analizador.tasa_por_categoria("loan_grade"))
+st.subheader("Correlación con impago")
+st.dataframe(analizador.correlacion_con_objetivo())
+st.text(analizador.contexto_para_agente())
