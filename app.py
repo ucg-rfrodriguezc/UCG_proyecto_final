@@ -1,5 +1,5 @@
 import streamlit as st
-from src.data_loader import cargar_datos, limpiar_datos, reporte_calidad
+from src.carga_de_datos import cargar_datos, limpiar_datos, reporte_calidad
 
 st.set_page_config(page_title="Riesgo Crediticio", layout="wide")
 
@@ -19,7 +19,7 @@ st.subheader("Bitácora de limpieza")
 st.json(bitacora)
 st.dataframe(limpio.head(20))
 
-from src.eda import AnalizadorRiesgo
+from src.analisis_exploratorio import AnalizadorRiesgo
 
 analizador = AnalizadorRiesgo(limpio)
 
@@ -77,3 +77,44 @@ st.dataframe(
 # --- Contexto que recibirá el agente (útil para el video) ---
 with st.expander("Ver contexto que se enviará al agente de IA"):
     st.code(analizador.contexto_para_agente(), language="text")
+
+
+from src.carga_de_datos import COLUMNAS_NUMERICAS
+from src.visualizador_de_graficos import (
+    boxplot_por_estado,
+    dispersion_riesgo,
+    grafico_distribucion_objetivo,
+    grafico_tasa_impago,
+    heatmap_correlacion,
+    heatmap_cruzado_seaborn,
+    histograma_numerico,
+)
+
+st.header("Prueba de visualizaciones")
+tasa_global = analizador.perfil_general()["tasa_impago_pct"]
+
+t1, t2, t3, t4 = st.tabs(["Objetivo", "Riesgo por grupo", "Numéricas", "Relaciones"])
+
+with t1:
+    st.plotly_chart(grafico_distribucion_objetivo(limpio))
+
+with t2:
+    tipo = st.radio("Tipo de variable", ["Categórica", "Numérica segmentada"], horizontal=True)
+    if tipo == "Categórica":
+        col = st.selectbox("Variable", ["loan_grade", "loan_intent", "person_home_ownership", "cb_person_default_on_file"])
+        tabla = analizador.tasa_por_categoria(col)
+    else:
+        col = st.selectbox("Variable", ["loan_percent_income", "loan_int_rate", "person_income", "person_age", "loan_amnt"])
+        tabla = analizador.tasa_por_segmento(col)
+    st.plotly_chart(grafico_tasa_impago(tabla, col, tasa_global, f"% de impago por {col}"))
+
+with t3:
+    col_num = st.selectbox("Variable numérica", COLUMNAS_NUMERICAS)
+    log = st.checkbox("Escala logarítmica", value=(col_num == "person_income"))
+    st.plotly_chart(histograma_numerico(limpio, col_num, escala_log=log))
+    st.plotly_chart(boxplot_por_estado(limpio, col_num))
+
+with t4:
+    st.plotly_chart(heatmap_correlacion(analizador.matriz_correlacion()))
+    st.plotly_chart(dispersion_riesgo(limpio, "loan_int_rate", "loan_percent_income"))
+    st.pyplot(heatmap_cruzado_seaborn(limpio, "loan_grade", "loan_intent"))

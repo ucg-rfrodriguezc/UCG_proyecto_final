@@ -5,7 +5,7 @@
 import numpy as np
 import pandas as pd
 
-from src.data_loader import COLUMNAS_CATEGORICAS, COLUMNAS_NUMERICAS, TARGET
+from src.carga_de_datos import COLUMNAS_CATEGORICAS, COLUMNAS_NUMERICAS, TARGET
 
 # Segmentos para variables numéricas: (límites, etiquetas)
 SEGMENTOS = {
