@@ -1,4 +1,4 @@
-#Módulo de carga, validación y limpieza de datos.
+# Módulo de carga, validación y limpieza de datos.
 from pathlib import Path
 import pandas as pd
 
@@ -19,8 +19,8 @@ EDAD_MAXIMA = 100
 ANTIGUEDAD_MAXIMA = 60
 
 # Carga de datos
+# Lee el CSV y valida que existan las columnas esperadas.
 def cargar_datos(ruta=DATA_PATH) -> pd.DataFrame:
-    """Lee el CSV y valida que existan las columnas esperadas."""
     ruta = Path(ruta)
     if not ruta.exists():
         raise FileNotFoundError(f"No se encontró el dataset en: {ruta}")
@@ -32,8 +32,8 @@ def cargar_datos(ruta=DATA_PATH) -> pd.DataFrame:
     return df
 
 # Reporte general de calidad de datos
+# Calcula problemas de calidad sin modificar el DataFrame.
 def reporte_calidad(df: pd.DataFrame) -> dict:
-    """Calcula problemas de calidad sin modificar el DataFrame."""
     nulos = df.isna().sum()
     return {
         "filas": int(df.shape[0]),
@@ -46,16 +46,14 @@ def reporte_calidad(df: pd.DataFrame) -> dict:
     }
 
 # Limpieza de datos
+    # Limpia el dataset y devuelve (df_limpio, bitacora).
+    # Decisiones:
+    # - Duplicados: se eliminan.
+    # - Edad > 100: se eliminan las filas (dato imposible).
+    # - Antigüedad laboral > 60: se marca como nulo y se imputa.
+    # - emp_length nulo: mediana global.
+    # - loan_int_rate nulo: mediana por loan_grade (la tasa depende del grado).
 def limpiar_datos(df: pd.DataFrame):
-    """Limpia el dataset y devuelve (df_limpio, bitacora).
-
-    Decisiones:
-    - Duplicados: se eliminan.
-    - Edad > 100: se eliminan las filas (dato imposible).
-    - Antigüedad laboral > 60: se marca como nulo y se imputa.
-    - emp_length nulo: mediana global.
-    - loan_int_rate nulo: mediana por loan_grade (la tasa depende del grado).
-    """
     bitacora = {"filas_iniciales": len(df)}
     df = df.copy()
 
