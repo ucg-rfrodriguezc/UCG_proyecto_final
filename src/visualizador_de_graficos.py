@@ -1,7 +1,6 @@
 # Gráficos del proyecto (Plotly como principal, Seaborn como complemento).
 # Todas las funciones reciben datos ya calculados y devuelven una figura;
 # no usan Streamlit, así que app.py decide dónde mostrarlas.
-
 import matplotlib
 
 matplotlib.use("Agg")  # backend sin ventana, compatible con Streamlit
@@ -39,7 +38,7 @@ def grafico_distribucion_objetivo(df: pd.DataFrame) -> go.Figure:
     return fig
 
 # Barras de % de impago por grupo, con línea de la tasa global.
-# Sirve para variables categóricas y para numéricas segmentadas 
+# Sirve para variables categóricas y para numéricas segmentadas
 # (usa la tabla de AnalizadorRiesgo).
 def grafico_tasa_impago(tabla: pd.DataFrame, columna: str,
                         tasa_global: float, titulo: str) -> go.Figure:
@@ -89,6 +88,25 @@ def heatmap_correlacion(matriz: pd.DataFrame) -> go.Figure:
         title="Matriz de correlación (Pearson)",
     )
     fig.update_layout(template=PLANTILLA)
+    return fig
+
+# Barras horizontales: correlación de cada variable numérica con el impago.
+def grafico_correlacion_objetivo(serie: pd.Series) -> go.Figure:
+    datos = serie.rename("correlacion").reset_index()
+    datos.columns = ["variable", "correlacion"]
+    datos["sentido"] = datos["correlacion"].apply(
+        lambda v: "Aumenta el riesgo" if v > 0 else "Reduce el riesgo"
+    )
+    fig = px.bar(
+        datos.sort_values("correlacion"), x="correlacion", y="variable",
+        orientation="h", color="sentido", text="correlacion",
+        color_discrete_map={"Aumenta el riesgo": COLOR_IMPAGO,
+                            "Reduce el riesgo": COLOR_PAGO},
+        title="Correlación de cada variable con el impago",
+    )
+    fig.update_traces(texttemplate="%{text:.2f}")
+    fig.update_layout(template=PLANTILLA, legend_title_text="",
+                      xaxis_title="Correlación de Pearson", yaxis_title="")
     return fig
 
 # Dispersión de dos numéricas coloreada por estado (con muestreo).
