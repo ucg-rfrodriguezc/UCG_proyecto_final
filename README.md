@@ -4,7 +4,7 @@ Aplicación en Streamlit que explora un dataset de préstamos, segmenta el riesg
 
 Proyecto Final Integrador de *Paradigmas de Programación para Inteligencia Artificial y Análisis de Datos*, Maestría en Inteligencia Artificial y Ciencia de Datos, Universidad Casa Grande.
 
-- **Autor:** RONALD FABRIZIO RODRIGUEZ CASTRO
+- **Autor:** Ronald Fabrizio Rodriguez Castro
 - **Periodo:** C2026P1
 - **Video demostrativo:** [ENLACE DE YOUTUBE]
 
@@ -55,7 +55,7 @@ El agente **no calcula**: Python elige las herramientas de análisis y obtiene l
 | Antigüedad laboral nula | Mediana global | 889 |
 | Tasa de interés nula | Mediana por grado del préstamo | 3,094 |
 
-El dataset final tiene 32,411 filas. Los ingresos muy altos (hasta 6,000,000) se conservan porque son valores posibles, y se visualizan con escala logarítmica.
+El dataset final tiene 32,411 filas. El mayor ingreso original (6,000,000) pertenecía a un registro con edad de 144 años, que se elimina; el mayor ingreso válido (2,039,784) se conserva porque es un valor posible, y los ingresos se visualizan con escala logarítmica.
 
 ### Algunos resultados
 
