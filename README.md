@@ -6,7 +6,7 @@ Proyecto Final Integrador de *Paradigmas de Programación para Inteligencia Arti
 
 - **Autor:** Ronald Fabrizio Rodriguez Castro
 - **Periodo:** C2026P1
-- **Video demostrativo:** [ENLACE DE YOUTUBE]
+- **Video demostrativo (Google Drive):** https://drive.google.com/file/d/19-RqUtLmYa16o6PIX5KyII_PZxUpP-he/view?usp=drive_link
 
 ## Qué hace la aplicación
 
